@@ -6,11 +6,11 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 	Vector3 realPosition = Vector3.zero;
 	Quaternion realRotation = Quaternion.identity;
 	float lastUpdateTime;
-	private ThirdPersonController controller;
+//	private ThirdPersonController controller;
 
 	// Use this for initialization
 	void Start () {
-		controller = GetComponent<ThirdPersonController>();
+//		controller = GetComponent<ThirdPersonController>();
 	}
 	
 	// Update is called once per frame
@@ -29,14 +29,14 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 		{
 			stream.SendNext(transform.position);
 			stream.SendNext(transform.rotation);
-			stream.SendNext(controller.GetCurrentAnimationState());
-			Debug.Log(controller.GetCurrentAnimationState());
+//			stream.SendNext(controller.GetCurrentAnimationState());
+//			Debug.Log(controller.GetCurrentAnimationState());
 		} 
 		else 
 		{
 			realPosition = (Vector3)(stream.ReceiveNext());
 			realRotation = (Quaternion)(stream.ReceiveNext());
-			controller.SetAnimationState((CharacterState)stream.ReceiveNext());
+//			controller.SetAnimationState((CharacterState)stream.ReceiveNext());
 		}
 	}
 }
