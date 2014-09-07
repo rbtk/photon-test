@@ -134,6 +134,9 @@ public var jumpPoseAnimation : AnimationClip;
 
 function UpdateSmoothedMovementDirection ()
 {
+	if(!Camera.main)
+		return;
+
 	var cameraTransform = Camera.main.transform;
 	var grounded = IsGrounded();
 
@@ -427,6 +430,14 @@ function OnControllerColliderHit (hit : ControllerColliderHit )
 
 function GetSpeed () {
 	return moveSpeed;
+}
+
+function GetCurrentAnimationState () {
+	return _characterState;
+}
+
+function SetAnimationState(param : CharacterState) {
+	_characterState = param;
 }
 
 function IsJumping () {
