@@ -20,4 +20,9 @@ public class Respawner : MonoBehaviour {
 			player.transform.position = respawnObjects[index].transform.position;
 		}
 	}
+
+	public void SetPlayer(GameObject pl)
+	{
+		player = pl;
+	}
 }

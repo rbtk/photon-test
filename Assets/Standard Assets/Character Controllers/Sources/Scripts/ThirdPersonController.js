@@ -16,6 +16,7 @@ public var landAnimationSpeed : float = 1.0;
 public var attackMaxAnimationSpeed : float = 1.0;
 
 private var _animation : Animation;
+var isMe : boolean = false;
 
 enum CharacterState {
 	Idle = 0,
@@ -26,7 +27,7 @@ enum CharacterState {
 	Attacking = 5,
 }
 
-private var _characterState : CharacterState;
+var _characterState : CharacterState;
 
 // The speed when walking
 var walkSpeed = 2.0;
@@ -211,7 +212,7 @@ function UpdateSmoothedMovementDirection ()
 			targetSpeed *= trotSpeed;
 			_characterState = CharacterState.Trotting;
 		}
-		else
+		else if (isMoving && isMe)
 		{
 			targetSpeed *= walkSpeed;
 			_characterState = CharacterState.Walking;
@@ -233,9 +234,6 @@ function UpdateSmoothedMovementDirection ()
 		if (isMoving)
 			inAirVelocity += targetDirection.normalized * Time.deltaTime * inAirControlAcceleration;
 	}
-
-
-
 }
 
 function ApplyAttacking ()
@@ -394,9 +392,7 @@ function Update() {
 	// Set rotation to the move direction
 	if (IsGrounded())
 	{
-
 		transform.rotation = Quaternion.LookRotation(moveDirection);
-
 	}
 	else
 	{

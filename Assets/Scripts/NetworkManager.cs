@@ -5,10 +5,12 @@ public class NetworkManager : MonoBehaviour {
 
 	public Camera standbyCamera;
 	public GameObject[] respawnObjects;
+	Respawner respawner;
 
 	// Use this for initialization
 	void Start () {
 		Connect ();
+		respawner = FindObjectOfType<Respawner>();
 	}
 
 	void Connect () {
@@ -47,17 +49,16 @@ public class NetworkManager : MonoBehaviour {
 			GameObject myPlayer = PhotonNetwork.Instantiate ("player", respawnObjects[index].transform.position, respawnObjects[index].transform.rotation, 0);
 
 			standbyCamera.active = false;
-//			standbyCamera.GetComponent("AudioListener").enabled = false;
-
-//			((MonoBehaviour)standbyCamera.GetComponent("AudioListener")).enabled = false;
 
 			((MonoBehaviour)myPlayer.GetComponent("ThirdPersonController")).enabled = true;
+
+			ThirdPersonController bla = myPlayer.GetComponent<ThirdPersonController>();
+			bla.isMe = true;
+
 			((MonoBehaviour)myPlayer.GetComponent("ThirdPersonCamera")).enabled = true;
-//			((MonoBehaviour)myPlayer.GetComponent("CharacterController")).enabled = true;
-
 			myPlayer.transform.FindChild("_cameraMain").gameObject.SetActive(true);
-//			((MonoBehaviour)myPlayer.transform.FindChild("warrior2swords").gameObject.GetComponent("CharacterController")).enabled = true;
 
+			respawner.SetPlayer(myPlayer);
 
 		} else 
 		{
