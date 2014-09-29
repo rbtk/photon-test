@@ -5,6 +5,7 @@ public class NetworkManager : MonoBehaviour {
 
 	public Camera standbyCamera;
 	public GameObject[] respawnObjects;
+	
 	Respawner respawner;
 
 	// Use this for initialization
@@ -45,7 +46,8 @@ public class NetworkManager : MonoBehaviour {
 	{
 		if (respawnObjects.Length > 0) {
 			int index = Random.Range (0, respawnObjects.Length);
-		
+	
+			
 			GameObject myPlayer = PhotonNetwork.Instantiate ("player", respawnObjects[index].transform.position, respawnObjects[index].transform.rotation, 0);
 
 			standbyCamera.active = false;
