@@ -131,4 +131,5 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 	{
 		playerName = name;
 	}
+
 }

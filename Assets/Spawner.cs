@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Spawner : MonoBehaviour {
 
+	public GameObject player;
+
 	//spawn points on the area
 	public Transform[] spawnPoints;
 	
@@ -22,14 +24,21 @@ public class Spawner : MonoBehaviour {
 	public bool isPrivate;
 	
 	void Start () {
-		
+	
 		//connect
-		PhotonNetwork.ConnectUsingSettings(Globals.version);
-		
-	}
-	
-	void Update () {
-	
+		//PhotonNetwork.ConnectUsingSettings(Globals.version);
+		if(PhotonNetwork.insideLobby) {
+			print ("Try to connect: " + roomName);
+			RoomOptions options = new RoomOptions();
+			options.isOpen = open;
+			options.isVisible = visible;
+			options.maxPlayers = playersMax;
+			options.customRoomProperties = new ExitGames.Client.Photon.Hashtable() {
+				{"type", roomName}
+			};
+
+			PhotonNetwork.JoinOrCreateRoom(roomName, options, null);
+		}
 	}
 	
 	//Photon network delegate methods
@@ -58,5 +67,8 @@ public class Spawner : MonoBehaviour {
 	void OnJoinedRoom()
 	{
 		Debug.Log("Joined room '" + roomName + "'!");
+		Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+		PhotonNetwork.Instantiate(player.name, spawnPoint.position, spawnPoint.rotation, 0);
+		ArenaSpawner.instance.SpawnBots(3);
 	}
 }

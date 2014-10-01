@@ -10,6 +10,7 @@ public class NetworkManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		DontDestroyOnLoad(gameObject);
 		Connect ();
 		respawner = FindObjectOfType<Respawner>();
 	}
@@ -38,6 +39,8 @@ public class NetworkManager : MonoBehaviour {
 	void OnJoinedRoom()
 	{
 		Debug.Log ("Joined Room!");
+
+		if(Application.loadedLevelName != "ArenaScene")
 		SpawnPlayer ();
 	}
 
@@ -52,13 +55,14 @@ public class NetworkManager : MonoBehaviour {
 
 			standbyCamera.active = false;
 
-			((MonoBehaviour)myPlayer.GetComponent("ThirdPersonController")).enabled = true;
+			//((MonoBehaviour)myPlayer.GetComponent("ThirdPersonController")).enabled = true;
 
-			ThirdPersonController bla = myPlayer.GetComponent<ThirdPersonController>();
-			bla.isMe = true;
+//			ThirdPersonController bla = myPlayer.GetComponent<ThirdPersonController>();
+//			bla.isMe = true;
 
-			((MonoBehaviour)myPlayer.GetComponent("ThirdPersonCamera")).enabled = true;
-			myPlayer.transform.FindChild("_cameraMain").gameObject.SetActive(true);
+//			((MonoBehaviour)myPlayer.GetComponent("ThirdPersonCamera")).enabled = true;
+			myPlayer.transform.Find("_cameraMain").gameObject.SetActive(true);
+
 
 			respawner.SetPlayer(myPlayer);
 
