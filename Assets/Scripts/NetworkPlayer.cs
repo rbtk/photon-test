@@ -14,6 +14,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 	public AnimationClip runAnimation;
 	public AnimationClip jumpAnimation;
 	public AnimationClip attackAnimation;
+	public PlayerAnimation playerAnim;
 
 	Vector3 worldPosition;
 	Vector3 screenPosition;
@@ -33,46 +34,62 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
 
 	CharacterState _state;
+
+	private CHARACTER_STATE currentState = CHARACTER_STATE.Idle;
+	private PlayerController contr;
+
 //	Camera myCam = GameObject.Find("_cameraMain");
 
-	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		animation = GetComponent<Animation> ();
+		contr = GetComponent<PlayerController>();
 		_state = CharacterState.Idle;
-		myCamera = GameObject.Find ("_cameraMain").camera;
+//		myCamera = GameObject.Find ("_cameraMain").camera;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if (!photonView.isMine) 
-		{
-			transform.position = Vector3.Lerp(transform.position, realPosition, 0.1f);
-			transform.rotation = Quaternion.Lerp(transform.rotation, realRotation, 0.1f);
-
-			switch (_state)
-			{
-			case CharacterState.Idle:
-				animation.Play("idle");
+		if(!photonView.isMine) {
+			rigidbody.position = Vector3.Lerp(rigidbody.position, realPosition, 0.1f);
+			rigidbody.rotation = Quaternion.Lerp(rigidbody.rotation, realRotation, 0.1f);
+			
+			switch(currentState) {
+			case CHARACTER_STATE.Idle:
+				playerAnim.playIdleAnimation();
 				break;
-			case CharacterState.Walking:
-				animation.Play("walk");
+			case CHARACTER_STATE.MoveForward:
+				playerAnim.playMoveForwardAnimation();
 				break;
-			case CharacterState.Running:
-				animation.Play("run");
+			case CHARACTER_STATE.MoveBackward:
+				playerAnim.playMoveBackwardAnimation();
 				break;
-			case CharacterState.Jumping:
-				animation.Play("jump");
+			case CHARACTER_STATE.MoveLeft:
+				playerAnim.playMoveForwardAnimation();
 				break;
-			case CharacterState.Attacking:
-				animation.Play("attack");
+			case CHARACTER_STATE.MoveRight:
+				playerAnim.playMoveForwardAnimation();
 				break;
-			case CharacterState.Trotting:
-				animation.Play("walk");
+			case CHARACTER_STATE.MoveTopLeftDiagonal:
+				playerAnim.playMoveForwardAnimation();
+				break;
+			case CHARACTER_STATE.MoveTopRightDiagonal:
+				playerAnim.playMoveForwardAnimation();
+				break;
+			case CHARACTER_STATE.MoveBotLeftDiagonal:
+				playerAnim.playMoveBackwardAnimation();
+				break;
+			case CHARACTER_STATE.MoveBotRightDiagonal:
+				playerAnim.playMoveBackwardAnimation();
+				break;
+			case CHARACTER_STATE.Attacking:
+				playerAnim.playAttackAnimation();
+				break;
+			case CHARACTER_STATE.Jumping:
+				playerAnim.playJumpAnimation();
 				break;
 			default:
-				animation.Play("idle");
 				break;
 			}
 		}
@@ -81,23 +98,22 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
-
 		if (stream.isWriting) 
 		{
 			stream.SendNext(transform.position);
 			stream.SendNext(transform.rotation);
-			ThirdPersonController mc = GetComponent<ThirdPersonController>();
-			stream.SendNext((int)mc._characterState);
+			stream.SendNext((int)contr.currentState);
 			stream.SendNext("Nasko");
 		} 
 		else 
 		{
 			realPosition = (Vector3)(stream.ReceiveNext());
 			realRotation = (Quaternion)(stream.ReceiveNext());
-			CharacterState st = (CharacterState)stream.ReceiveNext();
+			CHARACTER_STATE st = (CHARACTER_STATE)stream.ReceiveNext();
 			if (!photonView.isMine)
 			{
-				_state = st;
+				print ("Animation state: " + st.ToString());
+				currentState = st;
 			}
 
 			playerName = (string)stream.ReceiveNext();
@@ -105,27 +121,27 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 		}
 	}
 
-	void OnGUI()
-	{
-		if (playerName != null)
-		{
-
-			Debug.Log ("Player name not null!");
-			RaycastHit hit;
-
-			Debug.Log("transoform "+ transform.position.x + " " + transform.position.y+ " " +transform.position.z);
-
-			if (!photonView.isMine) 
-			{
-				Ray ray = new Ray(myCamera.transform.position, Vector3.forward);
-
-				if (Physics.Raycast(ray))
-				{
-					Debug.Log("WOW");
-				}
-			}
-		}
-	}
+//	void OnGUI()
+//	{
+//		if (playerName != null)
+//		{
+//
+//			Debug.Log ("Player name not null!");
+//			RaycastHit hit;
+//
+//			Debug.Log("transoform "+ transform.position.x + " " + transform.position.y+ " " +transform.position.z);
+//
+//			if (!photonView.isMine) 
+//			{
+//				Ray ray = new Ray(myCamera.transform.position, Vector3.forward);
+//
+//				if (Physics.Raycast(ray))
+//				{
+//					Debug.Log("WOW");
+//				}
+//			}
+//		}
+//	}
 
 	void SetName (string name)
 	{

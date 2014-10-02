@@ -8,6 +8,8 @@ public class PlayerAnimation : Photon.MonoBehaviour {
 	public AnimationClip jumpingAnimation;
 	public AnimationClip attackAnimation;
 
+	public float walkSpeed = 1.5f;
+
 	private Animation selfAnimation;
 
 	// Use this for initialization
@@ -20,12 +22,12 @@ public class PlayerAnimation : Photon.MonoBehaviour {
 	}
 
 	public void playMoveForwardAnimation() {
-		selfAnimation[movingAnimation.name].speed = 1.5f;
+		selfAnimation[movingAnimation.name].speed = walkSpeed;
 		playAnimation(selfAnimation, movingAnimation);
 	}
 
 	public void playMoveBackwardAnimation() {
-		selfAnimation[movingAnimation.name].speed = -1.5f;
+		selfAnimation[movingAnimation.name].speed = -walkSpeed;
 		playAnimation(selfAnimation, movingAnimation);
 	}
 
@@ -36,6 +38,10 @@ public class PlayerAnimation : Photon.MonoBehaviour {
 	public void playAttackAnimation() {
 		selfAnimation[attackAnimation.name].speed = 2f;
 		blendAnimation(selfAnimation, attackAnimation);
+	}
+
+	public void StopAnimation() {
+		selfAnimation.Stop();
 	}
 
 	private void blendAnimation(Animation animation, AnimationClip clip) {

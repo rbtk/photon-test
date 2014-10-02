@@ -27,14 +27,20 @@ public class PlayerCamera : MonoBehaviour {
 	}
 
 	void LateUpdate() {
-		if (Time.deltaTime == 0 || Time.timeScale == 0 || playerTransform == null || !rotating) 
+		if (Time.deltaTime == 0 || Time.timeScale == 0 || playerTransform == null) 
 			return;
 
-//		H = Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * lookSpeed * Time.deltaTime;
-//		V = Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * lookSpeed * Time.deltaTime;
+		#if UNITY_EDITOR || UNITY_STANDALONE
+		H = Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * lookSpeed * Time.deltaTime;
+		V = Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * lookSpeed * Time.deltaTime;
+		#else 
+		if(!rotating) {
+			return;
+		}
 		H = direction;
 		H *= lookSpeed * Time.deltaTime;
 		V *= lookSpeed * Time.deltaTime;
+		#endif
 
 		angleH += H;
 		angleV += V;

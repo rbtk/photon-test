@@ -9173,8 +9173,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33fdc3c282c742d7be13fb2d29356f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  spawnPoints: []
+  standbyCamera: {fileID: 1750644119}
+  player: {fileID: 100022, guid: 638d6a41d161549bf99d31b9f3e3582d, type: 2}
+  spawnPoints:
+  - {fileID: 196368388}
+  - {fileID: 1371872121}
+  - {fileID: 17893024}
+  - {fileID: 1425568837}
+  - {fileID: 2008847773}
+  - {fileID: 1186723961}
   roomName: main
   playersMax: 10
   visible: 1
@@ -14533,11 +14540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec0b8fa69629443d96f8938afcb86f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  standbyCamera: {fileID: 1750644119}
-  respawnObjects:
-  - {fileID: 1371872120}
-  - {fileID: 196368387}
-  - {fileID: 17893023}
 --- !u!114 &1803746444
 MonoBehaviour:
   m_ObjectHideFlags: 0

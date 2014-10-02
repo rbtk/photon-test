@@ -3,7 +3,10 @@ using System.Collections;
 
 public class Spawner : MonoBehaviour {
 
+
+	public Camera standbyCamera;
 	public GameObject player;
+
 
 	//spawn points on the area
 	public Transform[] spawnPoints;
@@ -22,9 +25,12 @@ public class Spawner : MonoBehaviour {
 	
 	//determines if the room is private
 	public bool isPrivate;
+
+	private Respawner respawner;
+
 	
 	void Start () {
-	
+		respawner = FindObjectOfType<Respawner>();
 		//connect
 		//PhotonNetwork.ConnectUsingSettings(Globals.version);
 		if(PhotonNetwork.insideLobby) {
@@ -43,11 +49,22 @@ public class Spawner : MonoBehaviour {
 	
 	//Photon network delegate methods
 	
-	void OnJoinedLoby()
+	void OnJoinedLobby()
 	{
 		Debug.Log("Joined Lobby...");
 		
 		Debug.Log("Joining room '" + roomName + "'");
+
+		print ("Try to connect: " + roomName);
+		RoomOptions options = new RoomOptions();
+		options.isOpen = open;
+		options.isVisible = visible;
+		options.maxPlayers = playersMax;
+		options.customRoomProperties = new ExitGames.Client.Photon.Hashtable() {
+			{"type", roomName}
+		};
+		
+		PhotonNetwork.JoinOrCreateRoom(roomName, options, null);
 		
 //		RoomOptions roomOptions = new RoomOptions() { isVisible = visible, maxPlayers = playersMax };
 		
@@ -66,9 +83,31 @@ public class Spawner : MonoBehaviour {
 	
 	void OnJoinedRoom()
 	{
+
+
 		Debug.Log("Joined room '" + roomName + "'!");
-		Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-		PhotonNetwork.Instantiate(player.name, spawnPoint.position, spawnPoint.rotation, 0);
-		ArenaSpawner.instance.SpawnBots(3);
+		SpawnPlayer();
+	}
+
+	void SpawnPlayer ()
+	{
+		if (spawnPoints.Length > 0) {
+			int index = Random.Range (0, spawnPoints.Length);
+
+			GameObject myPlayer = PhotonNetwork.Instantiate (player.name, spawnPoints[index].transform.position, spawnPoints[index].transform.rotation, 0);
+
+			if(standbyCamera != null)
+				standbyCamera.active = false;
+
+			myPlayer.transform.Find("_cameraMain").gameObject.SetActive(true);
+			
+			if(respawner != null)
+				respawner.SetPlayer(myPlayer);
+			
+		} else 
+		{
+			Debug.Log("Add 1 spawn point at least!");
+		}
+		
 	}
 }

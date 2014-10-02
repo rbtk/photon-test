@@ -29,6 +29,9 @@ public class AIStateController : MonoBehaviour {
 	
 	public float[] stateDelayTimer = new float[(int)AI_STATE.NumberOfStates];
 
+	
+	public float maxDistToTarget = 1f;
+
 	private GameObject player;
 
 	void LateUpdate() {
@@ -45,7 +48,7 @@ public class AIStateController : MonoBehaviour {
 				player = null;
 				fireStateChangeEvent(AI_STATE.StopChasing);
 				return;
-			} else if(dist < 20 && dist > 1) {
+			} else if(dist < 20 && dist > maxDistToTarget) {
 				firePlayerDetectedEvent(AI_STATE.Chasing, player);
 			}else {
 				firePlayerDetectedEvent(AI_STATE.Attacking, player);

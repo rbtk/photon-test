@@ -12,11 +12,14 @@ public class AIController : MonoBehaviour {
 	public PlayerAnimation playerAnim;
 	public AIStateController currentStateController;
 
+	public ParticleSystem deathParticles;
+
 	private AI_STATE currentState = AI_STATE.Idle;
 
 	private GameObject player;
 	private Vector3 lastWaypoint = Vector3.zero;
 	private bool reachedPoint = true;
+	private bool dead = false;
 
 	// Use this for initialization
 	void Start () {
@@ -30,6 +33,9 @@ public class AIController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(dead)
+			return;
+
 		onStateCycle();
 	}
 
@@ -206,6 +212,8 @@ public class AIController : MonoBehaviour {
 	
 	private void onStateChanged(AI_STATE newState) {
 
+		if(dead) return;
+
 		if(currentState == newState) {
 			return;
 		}
@@ -281,14 +289,20 @@ public class AIController : MonoBehaviour {
 
 	private void TakeDamage(int damage) {
 		health -= damage;
-		if( health <= 0 ) {
+		if( health <= 0 && !dead) {
+			if(deathParticles != null) {
+				deathParticles.enableEmission = true;
+				deathParticles.Play();
+			}
+			dead = true;
+			playerAnim.StopAnimation();
 			SendMessageUpwards("Die");
 		}
 	}
 
 	void OnDestroy() {
 		currentStateController.playerStateHandlerEvent -= onStateChanged;
-		currentStateController.playerDetectedHandlerEvent += onPlayerDetected;
+		currentStateController.playerDetectedHandlerEvent -= onPlayerDetected;
 	}
 
 }

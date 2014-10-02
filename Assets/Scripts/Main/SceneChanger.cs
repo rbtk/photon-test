@@ -7,11 +7,14 @@ public class SceneChanger : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col)
 	{
-		if(PhotonNetwork.inRoom) {
-			PhotonNetwork.LeaveRoom();
-		}
-		PhotonNetwork.Destroy(col.gameObject);
+		if(col.gameObject.GetComponent<PhotonView>().isMine) {
+			PhotonNetwork.Destroy(col.gameObject);
 
-		Application.LoadLevel(destination);
+			if(PhotonNetwork.inRoom) {
+				PhotonNetwork.LeaveRoom();
+			}
+
+			PhotonNetwork.LoadLevel(destination);
+		}
 	}
 }
