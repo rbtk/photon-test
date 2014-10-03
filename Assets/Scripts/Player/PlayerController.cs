@@ -3,6 +3,9 @@ using System.Collections;
 using System;
 
 public class PlayerController : Photon.MonoBehaviour, ICharacter {
+
+	public delegate void playerDiedEventHandler(GameObject player);
+	public static event playerDiedEventHandler playerDiedEvent;
 	
 	public float health;
 	public float mana;
@@ -16,16 +19,15 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	public PlayerCamera playerCamera;
 	public PlayerAnimation playerAnim;
 	public PlayerStateController playerStateController;
+	public ParticleSystem fireworks;
 
 	private float maxHealth;
 	private float maxMana;
 
-	private CHARACTER_STATE currentState = CHARACTER_STATE.Idle;
-	private Rigidbody selfRigidbody;
+	private bool dead = false;
 
-	private Vector3 realPosition = Vector3.zero;
-	private Quaternion realRotation = Quaternion.identity;
-	private string playerName{ get; set; }
+	public CHARACTER_STATE currentState = CHARACTER_STATE.Idle;
+	private Rigidbody selfRigidbody;
 
 	void Awake() {
 		if(photonView.isMine) {
@@ -34,7 +36,7 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 			ui.playerCamera = playerCamera;
 			ui.playerStateController = playerStateController;
 		} else {
-			//this.enabled = false;
+			this.enabled = false;
 		}
 	}
 
@@ -53,50 +55,9 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	
 	// Update is called once per frame
 	void Update () {
-		if(photonView.isMine) {
-			onStateCycle();
-		} else {
-			rigidbody.position = Vector3.Lerp(rigidbody.position, realPosition, 0.1f);
-			rigidbody.rotation = Quaternion.Lerp(rigidbody.rotation, realRotation, 0.1f);
+		if(dead) return;
 
-			switch(currentState) {
-			case CHARACTER_STATE.Idle:
-				playerAnim.playIdleAnimation();
-				break;
-			case CHARACTER_STATE.MoveForward:
-				playerAnim.playMoveForwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveBackward:
-				playerAnim.playMoveBackwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveLeft:
-				playerAnim.playMoveForwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveRight:
-				playerAnim.playMoveForwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveTopLeftDiagonal:
-				playerAnim.playMoveForwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveTopRightDiagonal:
-				playerAnim.playMoveForwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveBotLeftDiagonal:
-				playerAnim.playMoveBackwardAnimation();
-				break;
-			case CHARACTER_STATE.MoveBotRightDiagonal:
-				playerAnim.playMoveBackwardAnimation();
-				break;
-			case CHARACTER_STATE.Attacking:
-				playerAnim.playAttackAnimation();
-				break;
-			case CHARACTER_STATE.Jumping:
-				playerAnim.playJumpAnimation();
-				break;
-			default:
-				break;
-			}
-		}
+		onStateCycle();
 	}
 
 	private void onStateCycle() {
@@ -173,9 +134,9 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 			result = true;
 			break;
 		case CHARACTER_STATE.Attacking:
-			if(playerStateController.stateDelayTimer[(int)CHARACTER_STATE.Attacking] < Time.time) {
+			//if(playerStateController.stateDelayTimer[(int)CHARACTER_STATE.Attacking] < Time.time) {
 				result = true;
-			} 
+			//} 
 			break;
 		case CHARACTER_STATE.Jumping:
 			result = true;
@@ -232,6 +193,8 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	}
 
 	private void onStateChanged(CHARACTER_STATE newState) {
+		if(dead) return;
+
 		if(currentState == newState) {
 			return;
 		}
@@ -288,39 +251,29 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	}
 	
 	public void TakeDamage(int damage) {
-		health -= damage;
-		if( health <= 0 ) {
-			health = 1;
-		}
 
-		ui.UpdateHealthAndMana(health / maxHealth, 1);
-	}
-
-	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-	{
-		
-		if (stream.isWriting) 
-		{
-			stream.SendNext(rigidbody.position);
-			stream.SendNext(rigidbody.rotation);
-			stream.SendNext((int)currentState);
-			//stream.SendNext("Nasko");
-		} 
-		else 
-		{
-			realPosition = (Vector3)(stream.ReceiveNext());
-			realRotation = (Quaternion)(stream.ReceiveNext());
-			CHARACTER_STATE st = (CHARACTER_STATE)stream.ReceiveNext();
-			if (!photonView.isMine)
-			{
-				onStateChanged(st);
+		if(photonView.isMine) {
+			health -= damage;
+			if( health <= 0 ) {
+				if(playerDiedEvent != null) {
+					playerDiedEvent(gameObject);
+				}
+				health = maxHealth;
+				PlayFireworks();
 			}
-			
-			//playerName = (string)stream.ReceiveNext();
-			
+
+			ui.UpdateHealthAndMana(health / maxHealth, 1);
 		}
 	}
 
+	[RPC]
+	public void Fireworks() {
+		fireworks.Play();
+	}
+	
+	private void PlayFireworks() {
+		photonView.RPC("Fireworks", PhotonTargets.All, null);
+	}
 
 	public void Rotate() {
 		//Quaternion rotation = Quaternion.Euler(new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0) * aimSpeed * Time.deltaTime) * rigidbody.rotation;

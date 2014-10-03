@@ -38,22 +38,31 @@ public class PlayerStateController : Photon.MonoBehaviour {
 
 	void LateUpdate() {
 
-//		if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveTopLeftDiagonal);
-//		} else if( Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveTopRightDiagonal);
-//		} else if( Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveBotLeftDiagonal);
-//		} else if( Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveBotRightDiagonal);
-//		} else if(Input.GetKey(KeyCode.A)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveLeft);
-//		} else if( Input.GetKey(KeyCode.D)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveRight);
-//		} else if(Input.GetKey(KeyCode.W)){
-//			fireStateChangeEvent(CHARACTER_STATE.MoveForward);
-//		} else if(Input.GetKey(KeyCode.S)) {
-//			fireStateChangeEvent(CHARACTER_STATE.MoveBackward);
+		#if UNITY_EDITOR || UNITY_STANDALONE
+		if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveTopLeftDiagonal);
+		} else if( Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveTopRightDiagonal);
+		} else if( Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveBotLeftDiagonal);
+		} else if( Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveBotRightDiagonal);
+		} else if(Input.GetKey(KeyCode.A)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveLeft);
+		} else if( Input.GetKey(KeyCode.D)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveRight);
+		} else if(Input.GetKey(KeyCode.W)){
+			fireStateChangeEvent(CHARACTER_STATE.MoveForward);
+		} else if(Input.GetKey(KeyCode.S)) {
+			fireStateChangeEvent(CHARACTER_STATE.MoveBackward);
+		} else {
+			fireStateChangeEvent(CHARACTER_STATE.Idle);
+		}
+
+		if(Input.GetMouseButton(0)) {
+			fireStateChangeEvent(CHARACTER_STATE.Attacking);
+		}
+		#else
 		if(walking) {
 			fireStateChangeEvent(currentWalkDir);
 		} else {
@@ -63,6 +72,7 @@ public class PlayerStateController : Photon.MonoBehaviour {
 		if(attacking) {
 			fireStateChangeEvent(CHARACTER_STATE.Attacking);
 		}
+		#endif
 	}
 
 	public void Attack()
