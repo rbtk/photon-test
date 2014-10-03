@@ -1697,6 +1697,7 @@ MonoBehaviour:
   movingAnimation: {fileID: 7400000, guid: 1f786d3c19a6a4493a9b2dc5ef1d7caa, type: 2}
   jumpingAnimation: {fileID: 0}
   attackAnimation: {fileID: 7400000, guid: de61df0e36e1943a5a3305139bd822d6, type: 2}
+  walkSpeed: 1.5
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1708,6 +1709,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b951901ec3f43f890b3e50a96dbec2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateDelayTimer:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  maxDistToTarget: 1
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1726,6 +1743,8 @@ MonoBehaviour:
   fireRate: .5
   playerAnim: {fileID: 11400000}
   currentStateController: {fileID: 11400002}
+  deathParticles: {fileID: 0}
+  currentView: {fileID: 11400010}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1739,6 +1758,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDamage: 10
   maxDamage: 25
+  hitRange: 1
   isPlayer: 0
 --- !u!114 &11400008
 MonoBehaviour:
@@ -1751,6 +1771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c53b8ec2a129f4026bd54b9dd6d7351d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBoss: 0
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1

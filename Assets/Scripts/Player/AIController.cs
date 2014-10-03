@@ -13,6 +13,7 @@ public class AIController : MonoBehaviour {
 	public AIStateController currentStateController;
 
 	public ParticleSystem deathParticles;
+	public PhotonView currentView;
 
 	private AI_STATE currentState = AI_STATE.Idle;
 
@@ -288,6 +289,11 @@ public class AIController : MonoBehaviour {
 	}
 
 	private void TakeDamage(int damage) {
+		currentView.RPC("TakeDamage_RPC", PhotonTargets.AllBuffered, damage);
+	}
+
+	[RPC]
+	private void TakeDamage_RPC(int damage) {
 		health -= damage;
 		if( health <= 0 && !dead) {
 			if(deathParticles != null) {

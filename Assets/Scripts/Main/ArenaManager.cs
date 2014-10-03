@@ -41,6 +41,10 @@ public class ArenaManager : Photon.MonoBehaviour {
 	}
 
 	void OnJoinedRoom() {
+		if(!PhotonNetwork.isMasterClient) {
+			return;
+		}
+
 		playersConnected = PhotonNetwork.playerList.Length;
 
 		if(playersConnected >= 2 && !arenaDidBegin) {
