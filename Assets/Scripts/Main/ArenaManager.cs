@@ -41,9 +41,6 @@ public class ArenaManager : Photon.MonoBehaviour {
 	}
 
 	void OnJoinedRoom() {
-		if(!PhotonNetwork.isMasterClient) {
-			return;
-		}
 
 		playersConnected = PhotonNetwork.playerList.Length;
 
@@ -54,6 +51,18 @@ public class ArenaManager : Photon.MonoBehaviour {
 			arenaDidBegin = true;
 			//Temporary
 			SpawnBots(botsToKill);
+		}
+	}
+
+	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		if (stream.isWriting) 
+		{
+			stream.SendNext(arenaDidBegin);
+		} 
+		else 
+		{
+			arenaDidBegin = (bool)stream.ReceiveNext();
 		}
 	}
 
