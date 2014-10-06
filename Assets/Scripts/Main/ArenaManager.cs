@@ -44,7 +44,7 @@ public class ArenaManager : Photon.MonoBehaviour {
 
 		playersConnected = PhotonNetwork.playerList.Length;
 
-		if(playersConnected >= 2 && !arenaDidBegin) {
+		if(playersConnected >= 1 && !arenaDidBegin) {
 			if(arenaEvent != null) {
 				arenaEvent(ARENA_EVENT.WAVE_1);
 			}

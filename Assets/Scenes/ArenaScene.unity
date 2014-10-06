@@ -957,7 +957,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed47254906264a7fa348cb43903f1a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  botPrefab: {fileID: 100076, guid: 91bae300db21344ccba64c76d6acb4e9, type: 2}
+  botPrefab: {fileID: 100080, guid: bdcc455318e6d4b849023dd6edfb269a, type: 2}
   bossPrefab: {fileID: 100080, guid: bdcc455318e6d4b849023dd6edfb269a, type: 2}
   teleporter: {fileID: 232268944}
   spawnPoints:
@@ -965,7 +965,7 @@ MonoBehaviour:
   - {fileID: 2032636127}
   - {fileID: 1056272722}
   playerRespawnPoint: {fileID: 1189094066}
-  botsToKill: 1
+  botsToKill: 50
 --- !u!4 &758452815
 Transform:
   m_ObjectHideFlags: 0
@@ -1338,6 +1338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
 --- !u!4 &965092799
 Transform:
   m_ObjectHideFlags: 0
