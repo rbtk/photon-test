@@ -59,7 +59,8 @@ public class PlayerStateController : Photon.MonoBehaviour {
 			fireStateChangeEvent(CHARACTER_STATE.Idle);
 		}
 
-		if(Input.GetMouseButton(0)) {
+		if(Input.GetMouseButton(0))
+		{	
 			fireStateChangeEvent(CHARACTER_STATE.Attacking);
 		}
 		#else

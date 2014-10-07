@@ -19,6 +19,7 @@ private var timeleft : float; // Left time for current interval
 
 function Start()
 {
+	Application.targetFrameRate = 60.0;
     timeleft = updateInterval;  
 }
 

@@ -13,13 +13,14 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	public float moveSpeed;
 	public float fireRate;
 	
-	public GameObject uiPrefab;
+//	public GameObject uiPrefab;
 
-	public UIController ui;
+//	public UIController ui;
 	public PlayerAnimation playerAnim;
 	public PlayerStateController playerStateController;
 	public ParticleSystem fireworks;
-
+	private Camera mainCamera = Camera.main;
+	
 	private float maxHealth;
 	private float maxMana;
 
@@ -28,11 +29,15 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	public CHARACTER_STATE currentState = CHARACTER_STATE.Idle;
 	private Rigidbody selfRigidbody;
 
+	private NavMeshAgent navAgent;
+	
+
 	void Awake() {
 		if(photonView.isMine) {
-			GameObject go = GameObject.Instantiate(uiPrefab) as GameObject;
-			ui = go.GetComponent<UIController>();
-			ui.playerStateController = playerStateController;
+//			GameObject go = GameObject.Instantiate(uiPrefab) as GameObject;
+//			ui = go.GetComponent<UIController>();
+//			ui.playerStateController = playerStateController;
+			
 		} else {
 			this.enabled = false;
 		}
@@ -47,6 +52,8 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 
 		playerStateController.playerStateHandlerEvent += onStateChanged;
 		selfRigidbody = GetComponent<Rigidbody>();
+		
+		navAgent = GetComponent<NavMeshAgent>();
 	}
 
 	// Use this for initialization
@@ -55,6 +62,47 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	void Update () {
 		if(dead) return;
 
+		if (photonView.isMine)
+		{
+	
+#if UNITY_EDITOR
+			if (Input.GetMouseButtonDown(0))
+			{
+				Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+				
+				RaycastHit hit;
+				
+				if (Physics.Raycast(ray, out hit))
+				{
+					navAgent.SetDestination(hit.point);
+				}
+				
+			}
+#else
+			if (Input.touchCount>0)
+			{
+				Touch touch = Input.touches[0];
+				
+				Ray ray = mainCamera.ScreenPointToRay(touch.position);
+				
+				RaycastHit hit;
+				
+				if (Physics.Raycast(ray, out hit))
+					navAgent.SetDestination(hit.point);
+			}
+			
+#endif		
+			
+			if(navAgent.remainingDistance > 0)
+			{
+				playerAnim.playMoveForwardAnimation();
+			}
+			else
+			{
+				playerAnim.playIdleAnimation();
+			}
+		}
+		
 		onStateCycle();
 	}
 
@@ -260,7 +308,7 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 				PlayFireworks();
 			}
 
-			ui.UpdateHealthAndMana(health / maxHealth, 1);
+//			ui.UpdateHealthAndMana(health / maxHealth, 1);
 		}
 	}
 

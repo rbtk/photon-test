@@ -101,6 +101,7 @@ public class Spawner : MonoBehaviour {
 			
 			cameraScript.player = myPlayer;
 			
+			
 			if(respawner != null)
 				respawner.SetPlayer(myPlayer);
 			

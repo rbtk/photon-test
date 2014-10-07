@@ -54,7 +54,7 @@ public class CameraMovementScript : MonoBehaviour {
 		if (currentCameraPoint != cameraPoints[minIndex].transform.position)
 			currentCameraPoint = cameraPoints[minIndex].transform.position;
 			
-		transform.position = Vector3.Lerp(transform.position, currentCameraPoint, smoothTransition * Time.deltaTime);
+		transform.position = Vector3.Slerp(transform.position, currentCameraPoint, smoothTransition * Time.deltaTime);
 		
 	}
 	
