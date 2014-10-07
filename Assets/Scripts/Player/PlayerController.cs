@@ -16,7 +16,6 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	public GameObject uiPrefab;
 
 	public UIController ui;
-	public PlayerCamera playerCamera;
 	public PlayerAnimation playerAnim;
 	public PlayerStateController playerStateController;
 	public ParticleSystem fireworks;
@@ -33,7 +32,6 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 		if(photonView.isMine) {
 			GameObject go = GameObject.Instantiate(uiPrefab) as GameObject;
 			ui = go.GetComponent<UIController>();
-			ui.playerCamera = playerCamera;
 			ui.playerStateController = playerStateController;
 		} else {
 			this.enabled = false;

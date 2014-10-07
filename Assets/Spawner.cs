@@ -91,15 +91,15 @@ public class Spawner : MonoBehaviour {
 
 	void SpawnPlayer ()
 	{
-		if (spawnPoints.Length > 0) {
+		if (spawnPoints.Length > 0)
+		{
 			int index = Random.Range (0, spawnPoints.Length);
-
+	
 			GameObject myPlayer = PhotonNetwork.Instantiate (player.name, spawnPoints[index].transform.position, spawnPoints[index].transform.rotation, 0);
-
-			if(standbyCamera != null)
-				standbyCamera.active = false;
-
-			myPlayer.transform.Find("_cameraMain").gameObject.SetActive(true);
+			
+			CameraMovementScript cameraScript = standbyCamera.GetComponent<CameraMovementScript>();
+			
+			cameraScript.player = myPlayer;
 			
 			if(respawner != null)
 				respawner.SetPlayer(myPlayer);

@@ -9,7 +9,6 @@ public class UIController : MonoBehaviour {
 	public GameObject controlsUI;
 
 	public PlayerStateController playerStateController;
-	public PlayerCamera playerCamera;
 
 	void Start() {
 		healthBar.maxValue = 1;
@@ -49,11 +48,4 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
-	public void RotateCamera(int direction) {
-		if(direction != 0) {
-			playerCamera.RotateCamera(direction);
-		} else {
-			playerCamera.StopRotating();
-		}
-	}
 }
