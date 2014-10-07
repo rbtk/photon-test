@@ -791,7 +791,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 25.3732281, y: 7.54005814, z: -27.6470604}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400048}
@@ -1313,6 +1313,7 @@ MonoBehaviour:
   movingAnimation: {fileID: 7400004, guid: 9aea7b779c550344686428e239af7dec, type: 3}
   jumpingAnimation: {fileID: 0}
   attackAnimation: {fileID: 7400006, guid: 9aea7b779c550344686428e239af7dec, type: 3}
+  walkSpeed: 1.5
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1377,6 +1378,8 @@ MonoBehaviour:
   playerCamera: {fileID: 11400064}
   playerAnim: {fileID: 11400002}
   playerStateController: {fileID: 11400004}
+  fireworks: {fileID: 0}
+  currentState: 0
 --- !u!114 &11400064
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -12,7 +12,7 @@ public class PlayerController : Photon.MonoBehaviour, ICharacter {
 	public float aimSpeed;
 	public float moveSpeed;
 	public float fireRate;
-
+	
 	public GameObject uiPrefab;
 
 	public UIController ui;

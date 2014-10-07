@@ -7,6 +7,8 @@ public class SceneChanger : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col)
 	{
+		Debug.Log("the fuck?");
+		
 		if(col.gameObject.GetComponent<PhotonView>().isMine) {
 			PhotonNetwork.Destroy(col.gameObject);
 
